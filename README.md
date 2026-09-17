@@ -1,353 +1,166 @@
-# D1 Leadership AI Deep Dive
+# Dynatrace ESA App Template
 
-**Interactive Presentation Application**
+A reusable Dynatrace Gen3 AppEngine template for building presentation-style and dashboard-style apps with:
+- React + TypeScript UI (`ui/app`)
+- Dynatrace App Functions (`src/functions`)
+- Strato Design System components
+- Optional externalized markdown content workflow
 
-An interactive, collaborative presentation platform for delivering comprehensive 2-hour technical deep dives covering Dynatrace architectures, service challenges, AI capabilities, and organizational vision.
+This repository is intended as a starter template. Use it to create a new app, then replace the sample branding, content, and environment configuration.
 
-## Overview
+## What this template generates
 
-This Dynatrace ESA application provides:
+When used as a starting point, you get:
+- App manifest and runtime configuration (`app.config.json`)
+- Local development and deployment scripts (`dt-app` based)
+- Frontend shell with routing, shared components, and styles
+- Backend function examples for Grail queries, entities, and metrics
+- Content and documentation scaffolding for knowledge-heavy app experiences
 
-- **Password Protection**: Secure access with password authentication (Password: `AiDeepDive`)
-- **Cinematic Intro**: Elegant splash screen with inspirational AI quote
-- **Chevron Navigation**: Visual progress tracking across 8 major modules
-- **Hierarchical Content**: Topic-based navigation with expandable subtopics
-- **Rich Content Display**: Markdown rendering with callouts, code blocks, and diagrams
-- **Progress Tracking**: Automatic completion tracking and time estimates
-- **Bookmarks & Notes**: Personal annotation and reference system
-- **Search Functionality**: Quick navigation to specific topics
-- **Responsive Design**: Adapts to various screen sizes
-- **Dynatrace Strato Components**: Pre-configured with the Dynatrace design system
-- **TypeScript Support**: Fully typed for better development experience
+## Repository structure
 
-## Getting Started
-
-### 1. Copy This Template
-
-```bash
-# Copy this entire directory to start a new project
-cp -r DYNATRACE1-ESA-APP-DEEPDIVE YOUR-NEW-APP-NAME
-cd dynatrace1-esa-app-deepdive
+```text
+.
+├── app.config.json
+├── package.json
+├── main.tsx
+├── src/
+│   ├── functions/
+│   │   ├── query-grail.ts
+│   │   ├── get-metrics.ts
+│   │   └── get-entities.ts
+│   └── assets/
+├── ui/
+│   ├── index.html
+│   └── app/
+│       ├── App.tsx
+│       ├── index.tsx
+│       ├── components/
+│       ├── pages/
+│       ├── hooks/
+│       ├── services/
+│       ├── data/
+│       ├── config/
+│       └── styles/
+├── content/placeholders/
+└── docs/
 ```
 
-### 2. Update Configuration
+## How the template works
 
-Edit `app.config.json` to customize your app:
+1. `dt-app` runs the local app runtime and bundles frontend + app functions.
+2. `app.config.json` defines app identity, scopes, runtime host/port, and build settings.
+3. The UI calls app functions through SDK wrappers in `ui/app/utils/appFunctions.ts`.
+4. Content can be loaded from local data and can be extended to external sources (for example SharePoint, documented in `docs/SHAREPOINT_SETUP.md`).
 
-```json
-{
-  "app": {
-    "id": "my.d1esa.dynatrace.deepdive",
-    "name": "Deep Dive Presents (D1-ESA)",
-    "version": "1.0.0",
-    "description": "Your app description"
-  }
-}
-```
+## Prerequisites
 
-Edit `package.json` to update the project name:
+- Node.js `>=20`
+- npm
+- Access to a Dynatrace environment with Gen3 apps enabled
+- Permissions matching the scopes configured in `app.config.json`
 
-```json
-{
-  "name": "your-app-name",
-  "description": "Your app description"
-}
-```
-
-### 3. Install Dependencies
+## Setup
 
 ```bash
 npm install
 ```
 
-### 4. Run Development Server
+Then review and update at minimum:
+- `app.config.json` (`environmentUrl`, `app.id`, `app.name`, `app.description`, scopes)
+- `package.json` (`name`, `description`)
+
+## Development, validation, build, and deployment
 
 ```bash
+# Start local development server
 npm run dev
-```
 
-The app will be available at `http://localhost:3000`
+# Lint
+npm run lint
 
-### 5. Build and Deploy
+# Type checking
+npm run type-check
 
-```bash
-# Build the app
+# Build production package
 npm run build
 
 # Deploy to Dynatrace environment
 npm run deploy
+
+# Scaffold additional artifacts via dt-app
+npm run generate
 ```
 
-## Project Structure
+## Testing and linting notes
 
-```
-├── app.config.json               # App configuration and metadata
-├── package.json                  # Dependencies and scripts
-├── tsconfig.json                 # TypeScript configuration
-├── main.tsx                      # Entry point for dt-app
-├── PRD.md                        # Product Requirements Document
-├── docs/                         # Documentation
-│   ├── TechnicalArchitecture.md  # Technical architecture details
-│   ├── Wireframes_UI_Mockups.md  # UI/UX specifications
-│   └── PulseBoard_CustomerSignalFabric.md  # CCO PulseBoard vision
-├── src/                          # Backend app functions
-│   ├── functions/                # Dynatrace app functions
-│   │   ├── query-grail.ts        # DQL query execution
-│   │   ├── get-metrics.ts        # Metrics API
-│   │   └── get-entities.ts       # Entities API
-│   └── assets/                   # Static assets
-└── ui/                           # Frontend React application
-    ├── index.html                # HTML entry point
-    └── app/
-        ├── index.tsx             # React entry point
-        ├── App.tsx               # Main App component
-        ├── styles.css            # Global styles
-        ├── types/                # TypeScript type definitions
-        │   └── content.ts        # Content type definitions
-        ├── data/                 # Application data
-        │   ├── modules.ts        # Module configurations
-        │   ├── topics.ts         # Topic definitions
-        │   └── content.ts        # Topic content
-        ├── pages/                # Page components
-        │   ├── DeepDivePresentation.tsx  # Main presentation page
-        │   └── Dashboard.tsx     # Original dashboard (legacy)
-        ├── components/           # Reusable components
-        │   ├── ChevronNavigation.tsx  # Top module navigation
-        │   ├── Sidebar.tsx       # Left sidebar navigation
-        │   ├── ContentArea.tsx   # Main content display
-        │   └── MetricCard.tsx    # Metric display card
-        ├── hooks/                # Custom React hooks
-        └── utils/                # Utility functions
-```
+- Linting and static type checking are configured (`npm run lint`, `npm run type-check`).
+- There is currently no dedicated automated unit/integration test suite configured in this template.
 
-## Presentation Modules
+## Configuration reference
 
-The application covers 8 major modules designed for a comprehensive 2-hour presentation:
+Primary configuration file: `app.config.json`
+- `environmentUrl`: target Dynatrace environment
+- `app.id`: globally unique app identifier
+- `app.name` / `app.description` / `app.version`: app metadata
+- `app.scopes`: runtime permissions
+- `app.icon`: app icon asset path
+- `server.port` / `server.host`: local dev runtime settings
 
-1. **Platforms & Challenges** (20 min)
-   - Dynatrace Managed Offline
-   - Dynatrace Managed + PHA
-   - Dynatrace SaaS Classic
-   - Dynatrace SaaS Gen3
+Related configuration points:
+- `ui/app/config/sharepoint.ts` for optional external content mapping
+- `tsconfig.json` for TypeScript compiler settings
+- `.eslintrc.json` for linting rules
 
-2. **Service Challenges** (25 min)
-   - Case studies: Accenture, Academy, Shell, GM, FRIT & BOA, American Airlines
-   - Solution Architect, Services Consultant, and Account Team challenges
+## Extension points
 
-3. **AI Crash Course** (30 min)
-   - AI mindset and organizational readiness
-   - Security considerations and private hosting (Ollama)
-   - RAG, chunking, embeddings, and knowledge graphs
-   - Claude Projects, skills, and agents
+Common customizations:
+- Add or modify pages in `ui/app/pages`
+- Add reusable UI components in `ui/app/components`
+- Add backend capabilities in `src/functions`
+- Update navigation/shell behavior in `ui/app/App.tsx`
+- Replace placeholder markdown content in `content/placeholders`
+- Extend services in `ui/app/services`
 
-4. **App Building Demo** (15 min)
-   - App template overview
-   - Volumetric Explorer case study (Best Buy)
+## Update and migration guidance
 
-5. **Splunk Migration** (25 min)
-   - Migration challenges and complexity
-   - SPL to DQL conversion
-   - DynaBridge for Splunk workflow
+When reusing this template for a new app:
+1. Create a clean copy/clone for the new project.
+2. Rename app identity (`app.id`, app/package names, descriptions).
+3. Review all requested scopes and remove unneeded permissions.
+4. Replace sample/demo content and branding (including default passwords if used in your forked app).
+5. Re-run lint/type-check/build before first deployment.
 
-6. **DynaBridge Vision** (10 min)
-   - Platform expansion strategy
-   - Workflow consistency across platforms
+When syncing from this template into an existing app:
+- Diff and merge selectively (prefer keeping your app-specific data/services/pages).
+- Prioritize updates to shared shell patterns, config hardening, and docs.
+- Validate scope changes and deployment behavior in a non-production environment first.
 
-7. **Vision** (20 min)
-   - Customer Solutions & AI Engineering vision
-   - Forge Initiative
-   - LangGraph architecture
-   - CCO PulseBoard: Customer Signal Fabric
+## Troubleshooting
 
-8. **Q&A** (15 min)
-   - Open discussion and next steps
+- **`npm run dev` fails**: ensure Node 20+ and reinstall dependencies.
+- **Scope/permission errors**: verify `app.config.json` scopes and environment permissions.
+- **Deployment issues**: review `DEPLOYMENT.md` and confirm `environmentUrl` is correct.
+- **Content not loading from SharePoint**: verify URLs, access permissions, and setup in `docs/SHAREPOINT_SETUP.md`.
 
-## Features
+## Contributing
 
-### Navigation
-- **Top Chevron Bar**: Click any module to jump directly to that section
-- **Progress Indicators**: Visual progress bars show completion status
-- **Sidebar Topics**: Hierarchical topic navigation within each module
-- **Breadcrumbs**: Track your current location in the presentation
+1. Create focused, minimal changes.
+2. Keep template behavior generic and reusable.
+3. Run `npm run lint` and `npm run type-check` before submitting.
+4. Document user-facing behavior changes in this README or linked docs.
+5. Follow repository check-in expectations in `CHECK_IN_POLICY.md`.
 
-### Content Management
-- **Bookmarks**: Save important topics for quick reference
-- **Notes**: Add personal notes to any topic
-- **Search**: Quickly find specific topics across all modules
-- **Related Topics**: Navigate to related content easily
+## Additional documentation
 
-### Progress Tracking
-- **Automatic Tracking**: Topics marked complete when viewed
-- **Time Estimates**: See estimated time remaining for each module
-- **Persistent State**: Progress saved locally and restored on return
+- `QUICKSTART.md`
+- `DEPLOYMENT.md`
+- `EXAMPLES.md`
+- `docs/TechnicalArchitecture.md`
+- `docs/SHAREPOINT_SETUP.md`
 
-## Customization Guide
+## License status
 
-### Adding New Modules
+No repository license file is currently present.
 
-Edit `ui/app/data/modules.ts`:
-
-```typescript
-{
-  id: 'new-module',
-  title: 'New Module',
-  description: 'Module description',
-  duration: 15,
-  order: 9,
-  icon: 'icon-name',
-  color: '#hexcolor'
-}
-```
-
-### Adding New Topics
-
-Edit `ui/app/data/topics.ts`:
-
-```typescript
-'module-id': [
-  {
-    id: 'topic-id',
-    title: 'Topic Title',
-    contentFile: 'topic-file.md',
-    duration: 5,
-    order: 1,
-    tags: ['tag1', 'tag2'],
-    relatedTopics: ['related-topic-id']
-  }
-]
-```
-
-### Adding Content
-
-Edit `ui/app/data/content.ts`:
-
-```typescript
-'topic-id': {
-  id: 'topic-id',
-  title: 'Topic Title',
-  type: 'markdown',
-  content: `Your markdown content here...`,
-  metadata: {
-    duration: 5,
-    tags: ['Topic Tags'],
-    relatedTopics: ['Related Topics']
-  }
-}
-```
-
-### Old Dashboard (Legacy)
-
-### Adding New Tabs
-
-In `ui/app/pages/Dashboard.tsx`, add new tabs by:
-
-1. Adding a new tab type to the state:
-```typescript
-const [activeTab, setActiveTab] = useState<'tab1' | 'tab2' | 'tab3' | 'tab4'>('tab1');
-```
-
-2. Adding a new tab button:
-```tsx
-<Button onClick={() => setActiveTab('tab4')}>Tab 4</Button>
-```
-
-3. Adding the tab content:
-```tsx
-{activeTab === 'tab4' && (
-  <Container>
-    {/* Your content here */}
-  </Container>
-)}
-```
-
-### Modifying the DQL Query
-
-Update the default query in `ui/app/pages/Dashboard.tsx`:
-
-```typescript
-const [dql, setDql] = React.useState<string>(`fetch logs
-| filter <your conditions>
-| limit 100`);
-```
-
-### Adding New Components
-
-Create new components in `ui/app/components/` and import them into your pages:
-
-```typescript
-import { YourComponent } from '../components/YourComponent';
-```
-
-### Backend Functions
-
-Backend functions in `src/functions/` are automatically registered and can be called from the UI using the Dynatrace SDK.
-
-## Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build the application
-- `npm run deploy` - Deploy to Dynatrace environment
-- `npm run lint` - Run ESLint
-- `npm run type-check` - Run TypeScript type checking
-
-## Requirements
-
-- Node.js >= 20.0.0
-- Dynatrace environment with Gen3 Apps enabled
-
-## Documentation
-
-- [Dynatrace Apps Documentation](https://www.dynatrace.com/support/help/platform/apps)
-- [DQL Query Language](https://www.dynatrace.com/support/help/platform/grail/dynatrace-query-language)
-- [Strato Design System](https://design.dynatrace.com/)
-
-## Support
-
-For questions or issues, contact the D1-ESA team.
-
-## License
-
-Internal use only - D1 Enterprise Solutions & Architecture
-
-## SharePoint Content Integration
-
-The app supports loading content dynamically from SharePoint at runtime, allowing you to update content without rebuilding/redeploying the app.
-
-### Key Features
-
-- **Runtime Content Loading**: Fetch markdown content from SharePoint when users navigate
-- **Automatic Caching**: Content is cached in memory to minimize requests
-- **Automatic Fallback**: If SharePoint is unavailable, falls back to local bundled content
-- **Easy Configuration**: Simple URL mapping in config file
-- **No Rebuild Required**: Update content in SharePoint and users see changes immediately
-
-### Quick Setup
-
-1. **Upload .md files to SharePoint** with appropriate read permissions
-2. **Configure URLs** in `/ui/app/config/sharepoint.ts`:
-   ```typescript
-   export const SHAREPOINT_CONTENT = {
-     'rag-fundamentals': {
-       id: 'rag-fundamentals',
-       url: 'https://yourorg.sharepoint.com/.../rag-fundamentals.md',
-       title: 'RAG, Chunking & Embeddings',
-       type: 'markdown'
-     },
-     // Add more topics...
-   };
-   ```
-3. **Enable SharePoint** by setting `USE_SHAREPOINT_CONTENT = true`
-4. **Rebuild and deploy** the app
-
-### Documentation
-
-For detailed setup instructions, CORS configuration, authentication, and troubleshooting, see:
-- **[SharePoint Setup Guide](docs/SHAREPOINT_SETUP.md)**
-
-### Important Notes
-
-- Users must have SharePoint read permissions for the content files
-- Users should be authenticated to SharePoint in their browser before accessing the app
-- CORS may need to be configured by your SharePoint administrator
-- Currently disabled by default (`USE_SHAREPOINT_CONTENT = false`)
-
+If this template is intended for public reuse, add an explicit license in a follow-up change after confirming the correct legal choice with the repository owner. Until then, licensing remains undefined.
